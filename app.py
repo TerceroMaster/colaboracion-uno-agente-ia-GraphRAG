@@ -130,6 +130,7 @@ st.markdown("### 🚀 Trabajos Futuros y Próximas Funciones (Premium)")
 st.info("**Limitación de la Versión Actual:** Por ahora, este agente MVP se basa estrictamente en la información estructurada que extrajo hacia el Grafo de Conocimiento. Esto garantiza alta precisión conceptual, pero limita su capacidad para citar párrafos textuales enormes si no los guardó como relaciones cortas.")
 st.success("**Modelo Híbrido (GraphRAG + Vector DB):** En una futura versión Premium, implementaremos un segundo Agente Especializado en Búsqueda Vectorial. Cuando hagas una pregunta, el sistema usará el Grafo para entender el 'mapa conceptual' y usará la Base de Datos Vectorial para extraer la 'cita textual exacta' del PDF original, fusionando ambas en una respuesta hiper-completa e imbatible.")
 st.info("**Integración de Voz (Speech-to-Text / Text-to-Speech):** Actualmente la plataforma funciona mediante chat escrito. En fases futuras, se integrarán modelos de IA de audio para permitir a los abogados dictar sus consultas jurídicas por micrófono y escuchar las respuestas narradas por el Agente.")
+st.success("**Soporte Nativo a Texto Plano (.txt) para Mayor Certeza:** Aunque nuestro código 'arranca' y convierte PDFs a texto, los PDFs complejos (con tablas, columnas o escaneados) suelen generar un texto sucio que confunde a la IA y deforma el Grafo. En un futuro, permitiremos subir archivos `.txt` previamente limpiados, asegurando que el Grafo de Conocimiento sea infinitamente más perfecto, certero y sin pérdida de información.")
 
 st.markdown(
     """

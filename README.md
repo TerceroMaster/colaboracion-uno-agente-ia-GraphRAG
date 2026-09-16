@@ -12,6 +12,8 @@ Esta plataforma es un sistema avanzado de **Inteligencia Artificial Jurídica** 
 > **Limitación Actual:** En esta versión inicial (MVP), el agente extrae únicamente el "mapa conceptual" (entidades y relaciones) hacia Neo4j. Se limita a responder basado estrictamente en las conexiones que identificó, sin acceder al texto masivo crudo al momento de responder.
 >
 > **Trabajo Futuro (Modelo Híbrido Premium):** Para solucionar lo anterior, se desarrollará un segundo Agente Especializado (VectorRAG) que buscará en paralelo en una base de datos vectorial para recuperar y citar párrafos exactos y extensos, complementando las respuestas lógicas del Grafo de Conocimiento.
+> 
+> **Trabajo Futuro (Soporte Nativo a Texto Plano):** Para entornos de producción, se permitirá subir archivos de texto plano purificados (`.txt`). Aunque el sistema convierte PDFs a texto internamente, los PDFs complejos (tablas, columnas) generan extracciones "sucias" que confunden a la IA y deforman el Grafo. Permitir la subida de texto puro garantizará un Grafo de Conocimiento infinitamente más perfecto, certero y sin pérdida de información.
 
 ## 🛠️ Tecnologías Utilizadas
 - **Frontend:** Streamlit

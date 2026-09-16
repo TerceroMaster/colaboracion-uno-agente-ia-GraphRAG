@@ -86,7 +86,21 @@ El sistema orquestador fusionará ambos resultados para darte una respuesta súp
 
 ---
 
-## 5. ¿Dónde queda guardada la "Categoría" de los documentos?
+## 6. La Importancia del Formato (PDF vs Texto Plano) - Trabajo Futuro
+
+Nuestro sistema extrae automáticamente el texto de PDFs y documentos Word de forma invisible antes de enviarlo a la IA para crear el grafo. Sin embargo, **el formato PDF es notoriamente problemático**. Si un PDF legal tiene:
+- Tablas complejas.
+- Encabezados y pies de página en cada hoja.
+- Texto a dos columnas.
+- O es un documento escaneado (imágenes en lugar de texto).
+
+La extracción automática suele salir "sucia" (palabras pegadas, saltos de línea erróneos, caracteres basura). **Si el texto plano sale sucio, la IA se confunde y el Grafo de Conocimiento sale deforme o le faltan relaciones clave.**
+
+**Próxima Función (Soporte Nativo .txt):** Para entornos de producción empresarial, implementaremos soporte nativo para carga directa de archivos de **texto plano purificado (`.txt`)**. Si los ingenieros de datos limpian los documentos previamente y se aseguran de que sean texto puro y bien formateado, el Grafo de Conocimiento generado será **infinitamente más perfecto, certero y sin pérdida de información**.
+
+---
+
+## 7. ¿Dónde queda guardada la "Categoría" de los documentos?
 
 Cuando configuramos el Agente Legal, le añadimos una función para asignar categorías (ej. Ley Orgánica, Normativa, Código de Ética). 
 La modificación que hicimos en el archivo `neo4j_manager.py` y `1_Agente_Legal.py` le dice a Neo4j: *"Oye, cuando guardes el nodo de tipo `[Document]`, ponle una etiqueta extra que se llame `category` con el valor que escogió el usuario"*. 
