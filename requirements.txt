@@ -1,0 +1,13 @@
+streamlit
+langchain
+langchain-openai
+langchain-community
+langgraph
+neo4j
+openai
+pypdf2
+python-docx
+python-dotenv
+networkx
+pandas
+pyvis
