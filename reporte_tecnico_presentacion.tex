@@ -1,0 +1,118 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+\geometry{a4paper, margin=1in}
+
+\title{Plataforma Legal Inteligente basada en GraphRAG y Agentes IA\\
+\large Reporte Técnico de Arquitectura y Resultados}
+\author{Mtro. Luis Ramón Tercero Martínez González}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{1. Resumen Ejecutivo}
+El presente reporte técnico describe el diseño, desarrollo e implementación de una Plataforma Legal Inteligente que aprovecha la arquitectura \textbf{GraphRAG (Graph Retrieval-Augmented Generation)} y un ecosistema Multi-Agente orquestado por LangGraph. La plataforma permite la ingesta, indexación y consulta conversacional de documentos jurídicos complejos, garantizando cero alucinaciones mediante la extracción estructurada de entidades en una base de datos de grafos (Neo4j).
+
+\section*{2. Introducción}
+Los sistemas RAG tradicionales (VectorRAG) presentan limitaciones al tratar de establecer relaciones lógicas inter-documento. Cuando se analizan leyes, códigos o reglamentos institucionales, es crucial no solo recuperar párrafos semánticamente similares, sino comprender la jerarquía y dependencia entre normativas, autoridades y obligaciones. Para solucionar este problema, se diseñó este sistema basado en Grafos de Conocimiento (Knowledge Graphs), donde las "Entidades" y sus "Relaciones" conforman el motor principal de búsqueda y deducción lógica.
+
+\section*{3. Metodología y Arquitectura}
+El sistema opera bajo una arquitectura pipeline de tres fases principales:
+\begin{enumerate}
+    \item \textbf{Ingesta y Procesamiento (Chunking):} Los documentos PDF o DOCX son divididos en fragmentos (chunks) de longitud controlada (aprox. 600 caracteres) mediante \texttt{RecursiveCharacterTextSplitter}.
+    \item \textbf{Extracción de Grafos Asistida por IA:} Cada fragmento es analizado por el modelo LLM (\texttt{gpt-4o-mini}). A través de \textit{prompt engineering}, se extrae un JSON estructurado que mapea las entidades (Personas, Leyes, Conceptos) y las relaciones lógicas (APPLIES\_TO, DEFINES, HAS\_OBLIGATION) contenidas en el texto.
+    \item \textbf{Persistencia y Fusión (Merge):} Las entidades se inyectan en AuraDB (Neo4j). Las entidades idénticas de diferentes documentos se fusionan en un solo nodo central, logrando que los documentos se relacionen y conecten automáticamente entre sí.
+    \item \textbf{Agente Consultor (LangGraph):} El usuario interactúa con un Autómata Finito (StateGraph). Aunque conceptualmente es un solo "Agente Consultor", su cerebro interno se compone de 4 nodos colaborativos (sub-funciones): un Analizador de intenciones, un Buscador Local, un Buscador Global y un Generador de respuestas. Estos 4 nodos comparten una \textbf{Memoria a Corto Plazo} (\texttt{AgentState}, que almacena temporalmente la plática actual y se borra al cerrar sesión), mientras que Neo4j funge como su memoria a largo plazo (permanente).
+\end{enumerate}
+
+\vspace{0.5cm}
+\begin{center}
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[
+    font=\sffamily,
+    >=Stealth,
+    node distance=1.5cm and 2cm,
+    input node/.style={rectangle, rounded corners, draw=cyan!80, fill=white, very thick, minimum width=4cm, minimum height=1.2cm, align=center},
+    layer node/.style={rectangle, rounded corners, draw=blue!40, fill=cyan!10, very thick, minimum width=10.5cm, minimum height=1.2cm, align=center},
+    llm node/.style={rectangle, rounded corners, draw=blue!90, fill=blue!80, text=white, very thick, minimum width=10.5cm, minimum height=1.5cm, align=center, font=\sffamily\bfseries},
+    db node/.style={rectangle, rounded corners, draw=gray!80, fill=gray!20, thick, minimum width=10.5cm, minimum height=1.5cm, align=center},
+    dashed box/.style={draw=cyan, dashed, very thick, rounded corners, inner sep=20pt},
+    desc node/.style={align=left, font=\small\sffamily, text width=6cm}
+]
+
+% Inputs
+\node[input node] (docs) {\textbf{Ingesta de Datos}\\(Leyes, PDF, DOCX)};
+\node[input node] (chat) [right=1cm of docs] {\textbf{Interacción del Usuario}\\(Consultas en Lenguaje Natural)};
+
+% Layers
+\node[layer node] (ui) [below=1.5cm of $(docs)!0.5!(chat)$] {\textbf{Frontend (UI / Streamlit Web App)}};
+\node[layer node] (agents) [below=1cm of ui] {\textbf{Orquestador LangGraph (Multi-Agente)}\\Agente Extractor \quad | \quad Agente Consultor};
+\node[llm node] (llm) [below=1cm of agents] {OpenAI GPT-4o-mini (Razonamiento Lógico)};
+\node[db node] (db) [below=1cm of llm] {\textbf{Grafo de Conocimiento (Neo4j AuraDB)}\\Memoria Permanente (Largo Plazo)};
+
+% Bounding box
+\begin{scope}[on background layer]
+    \node[dashed box, fit=(ui) (agents) (llm) (db)] (backend) {};
+    \node[left=0.5cm of backend, align=center, text=blue!80!black, font=\bfseries] {Plataforma\\Legal\\Inteligente};
+\end{scope}
+
+% Arrows
+\draw[->, very thick, cyan!80!black] (docs.south) -- (docs.south |- ui.north);
+\draw[->, very thick, cyan!80!black] (chat.south) -- (chat.south |- ui.north);
+
+\draw[->, very thick, cyan!80!black] (ui.south) -- (agents.north);
+\draw[->, very thick, cyan!80!black] (agents.south) -- (llm.north);
+\draw[->, very thick, cyan!80!black] (llm.south) -- (db.north);
+
+% Descriptions on the right
+\node[desc node] (desc_ui) [right=1cm of ui] {\textbf{Frontend Interactivo}\\App web responsiva y Visualizador 3D};
+\node[desc node] (desc_agents) [right=1cm of agents] {\textbf{Pipeline Inteligente}\\Chunking, Nodos Semánticos, Enrutamiento};
+\node[desc node] (desc_llm) [right=1cm of llm] {\textbf{Cerebro Analítico}\\Bajo costo, Alta precisión conceptual};
+\node[desc node] (desc_db) [right=1cm of db] {\textbf{Graph Database}\\Nodos, Relaciones lógicas, Cero Alucinaciones};
+
+\end{tikzpicture}
+}
+\end{center}
+\vspace{0.5cm}
+
+\section*{4. Tecnologías y Herramientas Utilizadas (Stack)}
+\begin{itemize}
+    \item \textbf{Framework de Frontend:} Streamlit (Python).
+    \item \textbf{Orquestación de Agentes:} LangChain y LangGraph.
+    \item \textbf{Modelos de Lenguaje (LLMs):} OpenAI (\texttt{gpt-4o-mini}) para extracción de datos y generación de respuestas.
+    \item \textbf{Base de Datos:} Neo4j (AuraDB en la nube) con conectividad mediante el driver oficial de Python.
+    \item \textbf{Visualización de Grafos:} PyVis (Renderizado 3D de red impulsado por física).
+    \item \textbf{Procesamiento de Archivos:} PyPDF2 y python-docx.
+\end{itemize}
+
+\section*{5. Resultados Preliminares}
+\begin{itemize}
+    \item \textbf{Eliminación de Alucinaciones:} Durante las pruebas con normatividades institucionales, el agente rechazó exitosamente responder consultas ajenas al corpus documental, limitándose estrictamente al contenido extraído en el grafo.
+    \item \textbf{Descubrimiento de Conexiones Lógicas:} El sistema demostró capacidad deductiva; por ejemplo, conectando los principios del \textit{Código de Ética} con las jerarquías y dependencias descritas en la \textit{Ley Orgánica}, aunque estuviesen en documentos separados.
+    \item \textbf{Rendimiento Financiero:} La estrategia de procesamiento masivo hacia el grafo probó ser altamente eficiente, consumiendo escasos recursos financieros en tokens de OpenAI (menos de \$0.10 USD por cada $\sim$130,000 tokens procesados).
+\end{itemize}
+
+\section*{6. Discusión}
+La arquitectura GraphRAG básica implementada demostró una superioridad notable sobre los modelos de chat simples al entender la "estructura" de la ley. Sin embargo, se identificó que la estricta dependencia en búsquedas Cypher (búsqueda literal de palabras clave o descripciones en los nodos) puede resultar limitante cuando el usuario emplea sinónimos complejos. Para mitigar esto, se implementó una rutina de \textit{fallback} automático, demostrando que el diseño de agentes reactivos (LangGraph) aporta gran resiliencia al sistema.
+
+\section*{7. Perspectivas a Futuro (Next Steps)}
+Para escalar la plataforma a un nivel de producción empresarial Premium, se proyectan las siguientes fases:
+\begin{enumerate}
+    \item \textbf{Modelo Híbrido (GraphRAG + VectorRAG):} Integrar una base de datos vectorial (ej. Pinecone o Chroma) junto a Neo4j. Un Agente Híbrido cruzará la precisión conceptual del Grafo con la recuperación exacta de párrafos textuales (semántica vectorial) para emitir citas textuales impecables.
+    \item \textbf{Integración de IA Multimodal (Audio):} Implementación de Speech-to-Text (OpenAI Whisper) y Text-to-Speech para que la interacción pueda darse mediante dictado por voz y respuestas habladas.
+    \item \textbf{Seguridad y Control de Acceso (RBAC):} Autenticación de usuarios para que distintos abogados tengan acceso a distintos espacios de grafos.
+    \item \textbf{Ingesta de Texto Puro (.txt) Pre-procesado:} Aunque el sistema extrae automáticamente el texto de PDFs y documentos Word de forma invisible, el formato PDF suele generar extracciones sucias (tablas cruzadas, saltos de línea erróneos) que confunden a la IA y deforman el Grafo. Permitir la carga de archivos de texto plano purificados garantizará un Grafo de Conocimiento infinitamente más perfecto, certero y sin pérdida de relaciones clave.
+\end{enumerate}
+
+\section*{8. Conclusión}
+La implementación de GraphRAG orquestada mediante LangGraph representa un cambio de paradigma en la automatización jurídica. Al convertir documentos legales planos en redes de conocimiento interconectadas, la Inteligencia Artificial adquiere la capacidad no solo de "leer", sino de "entender" y "vincular" el marco normativo, garantizando precisión, trazabilidad y nulo riesgo de alucinación.
+
+\end{document}
