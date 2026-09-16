@@ -127,7 +127,9 @@ with col5:
 st.divider()
 
 st.markdown("### 🚀 Trabajos Futuros y Próximas Funciones (Premium)")
-st.info("**Integración de Voz (Speech-to-Text / Text-to-Speech):** Actualmente la plataforma funciona mediante chat escrito. En fases futuras (planes Premium), se integrarán modelos de IA de audio (como OpenAI Whisper) para permitir a los abogados dictar sus consultas jurídicas por micrófono y escuchar las respuestas narradas por el Agente, facilitando su uso tipo asistente virtual o en dispositivos móviles.")
+st.info("**Limitación de la Versión Actual:** Por ahora, este agente MVP se basa estrictamente en la información estructurada que extrajo hacia el Grafo de Conocimiento. Esto garantiza alta precisión conceptual, pero limita su capacidad para citar párrafos textuales enormes si no los guardó como relaciones cortas.")
+st.success("**Modelo Híbrido (GraphRAG + Vector DB):** En una futura versión Premium, implementaremos un segundo Agente Especializado en Búsqueda Vectorial. Cuando hagas una pregunta, el sistema usará el Grafo para entender el 'mapa conceptual' y usará la Base de Datos Vectorial para extraer la 'cita textual exacta' del PDF original, fusionando ambas en una respuesta hiper-completa e imbatible.")
+st.info("**Integración de Voz (Speech-to-Text / Text-to-Speech):** Actualmente la plataforma funciona mediante chat escrito. En fases futuras, se integrarán modelos de IA de audio para permitir a los abogados dictar sus consultas jurídicas por micrófono y escuchar las respuestas narradas por el Agente.")
 
 st.markdown(
     """

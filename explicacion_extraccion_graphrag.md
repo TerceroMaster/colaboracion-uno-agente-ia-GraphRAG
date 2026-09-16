@@ -77,12 +77,12 @@ En esta implementación básica de GraphRAG, el LLM extrajo el "jugo" (entidades
 De hecho, durante la indexación, nuestro código actual **sí guarda el texto exacto** dentro de un nodo tipo `[Chunk]` en Neo4j. Para lograr que el agente cite textos exactos usando puramente GraphRAG, solo tendríamos que modificar la consulta (Query) del Agente para decirle: 
 > *"Además de traerme las entidades y sus relaciones, ve al nodo `[Chunk]` del que salieron y tráeme el texto original."*
 
-### Modelos Híbridos (GraphRAG + Vector RAG)
-Otra alternativa común en la industria es usar un modelo **híbrido**. En un modelo híbrido, el sistema realiza dos búsquedas simultáneas:
-1.  Busca en el **Grafo (Neo4j)** para entender el contexto y las relaciones (evitando alucinaciones).
-2.  Busca en una **Base de Datos Vectorial (VectorRAG)** por similitud semántica para encontrar el párrafo exacto.
+### Modelos Híbridos (GraphRAG + Vector RAG) - (Próxima Versión Premium)
+Otra alternativa común en la industria, y que será nuestro siguiente paso evolutivo, es crear una arquitectura **Híbrida**. En un modelo híbrido, el sistema utilizará múltiples agentes simultáneos:
+1.  Un **Agente Analista (GraphRAG)** buscará en el Grafo (Neo4j) para entender el contexto estructural, las reglas y las relaciones lógicas (evitando alucinaciones).
+2.  Un **Agente Documental (VectorRAG)** buscará en una Base de Datos Vectorial por similitud semántica para recuperar el párrafo exacto original.
 
-Se juntan ambos resultados y el agente te da una respuesta súper contextualizada citando exactamente el artículo. **La desventaja:** Construir y mantener un modelo híbrido cuesta más (tiempo de desarrollo y costos de base de datos extra) y es más complejo, pero es el estándar de oro para aplicaciones legales en producción.
+El sistema orquestador fusionará ambos resultados para darte una respuesta súper contextualizada citando exactamente el artículo y mostrando la lógica jurídica detrás de la respuesta. **La desventaja:** Construir y mantener un modelo híbrido cuesta más (tiempo de desarrollo y costos de base de datos extra) y es más complejo, pero es el estándar de oro absoluto para aplicaciones legales en producción.
 
 ---
 

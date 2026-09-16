@@ -9,6 +9,10 @@ Esta plataforma es un sistema avanzado de **Inteligencia Artificial Jurídica** 
 3. **Info Actual:** Panel de control para revisar rápidamente los documentos indexados, su categoría, cantidad de páginas, fragmentos, y un **resumen automático** generado por la IA.
 4. **Gestión de Datos:** Herramienta para eliminar documentos específicos o formatear la base de datos por completo.
 
+> **Limitación Actual:** En esta versión inicial (MVP), el agente extrae únicamente el "mapa conceptual" (entidades y relaciones) hacia Neo4j. Se limita a responder basado estrictamente en las conexiones que identificó, sin acceder al texto masivo crudo al momento de responder.
+>
+> **Trabajo Futuro (Modelo Híbrido Premium):** Para solucionar lo anterior, se desarrollará un segundo Agente Especializado (VectorRAG) que buscará en paralelo en una base de datos vectorial para recuperar y citar párrafos exactos y extensos, complementando las respuestas lógicas del Grafo de Conocimiento.
+
 ## 🛠️ Tecnologías Utilizadas
 - **Frontend:** Streamlit
 - **Base de Datos de Grafos:** Neo4j (AuraDB)
