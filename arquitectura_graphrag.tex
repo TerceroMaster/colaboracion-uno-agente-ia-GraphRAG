@@ -1,0 +1,50 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+\begin{document}
+\begin{tikzpicture}[
+    font=\sffamily,
+    >=Stealth,
+    node distance=1.5cm and 2cm,
+    input node/.style={rectangle, rounded corners, draw=cyan!80, fill=white, very thick, minimum width=4cm, minimum height=1.2cm, align=center},
+    layer node/.style={rectangle, rounded corners, draw=blue!40, fill=cyan!10, very thick, minimum width=10.5cm, minimum height=1.2cm, align=center},
+    llm node/.style={rectangle, rounded corners, draw=blue!90, fill=blue!80, text=white, very thick, minimum width=10.5cm, minimum height=1.5cm, align=center, font=\sffamily\bfseries},
+    db node/.style={rectangle, rounded corners, draw=gray!80, fill=gray!20, thick, minimum width=10.5cm, minimum height=1.5cm, align=center},
+    dashed box/.style={draw=cyan, dashed, very thick, rounded corners, inner sep=20pt},
+    desc node/.style={align=left, font=\small\sffamily, text width=6cm}
+]
+
+% Inputs
+\node[input node] (docs) {\textbf{Ingesta de Datos}\\(Leyes, PDF, DOCX)};
+\node[input node] (chat) [right=1cm of docs] {\textbf{Interacción del Usuario}\\(Consultas en Lenguaje Natural)};
+
+% Layers
+\node[layer node] (ui) [below=1.5cm of $(docs)!0.5!(chat)$] {\textbf{Frontend (UI / Streamlit Web App)}};
+\node[layer node] (agents) [below=1cm of ui] {\textbf{Orquestador LangGraph (Multi-Agente)}\\Agente Extractor \quad | \quad Agente Consultor};
+\node[llm node] (llm) [below=1cm of agents] {OpenAI GPT-4o-mini (Razonamiento Lógico)};
+\node[db node] (db) [below=1cm of llm] {\textbf{Grafo de Conocimiento (Neo4j AuraDB)}\\Memoria Permanente (Largo Plazo)};
+
+% Bounding box
+\begin{scope}[on background layer]
+    \node[dashed box, fit=(ui) (agents) (llm) (db)] (backend) {};
+    \node[left=0.5cm of backend, align=center, text=blue!80!black, font=\bfseries] {Plataforma\\Legal\\Inteligente};
+\end{scope}
+
+% Arrows
+\draw[->, very thick, cyan!80!black] (docs.south) -- (docs.south |- ui.north);
+\draw[->, very thick, cyan!80!black] (chat.south) -- (chat.south |- ui.north);
+
+\draw[->, very thick, cyan!80!black] (ui.south) -- (agents.north);
+\draw[->, very thick, cyan!80!black] (agents.south) -- (llm.north);
+\draw[->, very thick, cyan!80!black] (llm.south) -- (db.north);
+
+% Descriptions on the right
+\node[desc node] (desc_ui) [right=1cm of ui] {\textbf{Frontend Interactivo}\\App web responsiva y Visualizador 3D};
+\node[desc node] (desc_agents) [right=1cm of agents] {\textbf{Pipeline Inteligente}\\Chunking, Nodos Semánticos, Enrutamiento};
+\node[desc node] (desc_llm) [right=1cm of llm] {\textbf{Cerebro Analítico}\\Bajo costo, Alta precisión conceptual};
+\node[desc node] (desc_db) [right=1cm of db] {\textbf{Graph Database}\\Nodos, Relaciones lógicas, Cero Alucinaciones};
+
+\end{tikzpicture}
+\end{document}
