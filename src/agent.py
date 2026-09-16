@@ -112,7 +112,8 @@ class GraphRAGAgent:
                 
         context = "\n".join(set(context_parts))
         if not context:
-            context = "No specific entities found in the knowledge graph for this query."
+            # Fallback to global search if no exact local entities were found
+            return self.global_search(state)
             
         return {"context": context}
 
