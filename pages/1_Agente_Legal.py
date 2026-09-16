@@ -25,7 +25,8 @@ if "agent" not in st.session_state:
 
 def generate_summary(text):
     """Generates a brief summary from the first 1500 chars of the text."""
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    api_key = os.getenv("OPENAI_API_KEY", "dummy_key")
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key=api_key)
     prompt = PromptTemplate.from_template("Redacta un resumen breve (2-3 oraciones) del siguiente texto legal. Texto: {text}")
     response = llm.invoke(prompt.format(text=text[:1500]))
     return response.content

@@ -9,7 +9,8 @@ load_dotenv()
 class GraphExtractor:
     def __init__(self, model_name="gpt-4o-mini"):
         # We use a model capable of JSON output. gpt-4o-mini is efficient and capable.
-        self.llm = ChatOpenAI(model=model_name, temperature=0, model_kwargs={"response_format": {"type": "json_object"}})
+        api_key = os.getenv("OPENAI_API_KEY", "dummy_key")
+        self.llm = ChatOpenAI(model=model_name, temperature=0, api_key=api_key, model_kwargs={"response_format": {"type": "json_object"}})
         
         self.extraction_prompt = ChatPromptTemplate.from_messages([
             ("system", """You are a legal data extraction expert. 

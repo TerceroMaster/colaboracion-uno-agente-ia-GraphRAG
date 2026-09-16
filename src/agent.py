@@ -17,7 +17,8 @@ class AgentState(TypedDict):
 
 class GraphRAGAgent:
     def __init__(self, neo4j_manager: Neo4jManager):
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        api_key = os.getenv("OPENAI_API_KEY", "dummy_key")
+        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key=api_key)
         self.neo4j_manager = neo4j_manager
         
         # Build the graph
