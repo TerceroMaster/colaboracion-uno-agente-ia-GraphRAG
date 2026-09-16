@@ -81,16 +81,18 @@ class GraphRAGAgent:
         query = state['messages'][-1].content
         
         # Extract potential entities from query to search in Neo4j
-        extract_prompt = f"Extract the key entities (names, laws, concepts) from this query. Return them as a comma-separated list. Query: {query}"
+        extract_prompt = f"Extract the key entities (names, laws, concepts) from this query. Return ONLY a comma-separated list. Do not include any conversational text. Query: {query}"
         entities_response = self.llm.invoke([HumanMessage(content=extract_prompt)])
-        entities = [e.strip() for e in entities_response.content.split(',')]
+        entities = [e.strip() for e in entities_response.content.replace("'", "").replace('"', "").split(',')]
         
         context_parts = []
         for entity in entities:
             # Simple exact match or contains search in Neo4j (case-insensitive)
             cypher = """
             MATCH (e:Entity)
-            WHERE toLower(e.name) CONTAINS toLower($entity) OR toLower($entity) CONTAINS toLower(e.name)
+            WHERE toLower(e.name) CONTAINS toLower($entity) 
+               OR toLower($entity) CONTAINS toLower(e.name)
+               OR toLower(e.description) CONTAINS toLower($entity)
             OPTIONAL MATCH (e)-[r]->(target)
             OPTIONAL MATCH (source)-[r2]->(e)
             RETURN e.name, e.type, e.description, 
