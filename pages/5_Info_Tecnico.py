@@ -27,7 +27,10 @@ Cuando subes un documento legal, no se guarda como texto plano. Ocurre este proc
 """)
 
 st.header("3. Arquitectura del Agente (LangGraph)")
-st.markdown("El Agente de Consultas funciona como una máquina de estados finitos (`StateGraph`). Su flujo de trabajo se define en `src/agent.py` de la siguiente manera:")
+st.markdown("""El Agente de Consultas funciona como una máquina de estados finitos (`StateGraph`). Su flujo de trabajo se define en `src/agent.py`. 
+
+A nivel conceptual, el usuario interactúa con un solo **"Agente Consultor"**, pero internamente, el "cerebro" de este agente está dividido en **4 Nodos** (sub-funciones especializadas) que trabajan en equipo. 
+Además, el agente utiliza un **`AgentState`** como una **Memoria a Corto Plazo** (una libreta de apuntes temporal que se borra al reiniciar la app) para pasarse información entre sus nodos durante los segundos que tarda en responder, mientras que Neo4j actúa como su **Memoria a Largo Plazo** (permanente).""")
 
 st.code("""
 # Pseudocódigo de la topología del Agente (LangGraph)

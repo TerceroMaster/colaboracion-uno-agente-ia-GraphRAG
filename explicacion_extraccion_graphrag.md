@@ -69,6 +69,15 @@ Cuando haces una pregunta (ej. *"¿De qué trata la SECCIÓN TERCERA?"*), el age
 
 El agente toma ese mapa, lo lee y redacta una respuesta fluida para ti basada *exclusivamente* en esas conexiones lógicas. 
 
+### ¿Cómo funciona el cerebro del Agente Consultor?
+A nivel conceptual, platicas con un solo "Agente Consultor". Sin embargo, a nivel de código (LangGraph), su cerebro está dividido en **4 Nodos** (sub-funciones especializadas) que trabajan en equipo en fracción de segundos:
+1. **Nodo Analyzer:** Determina si tu pregunta requiere una búsqueda local, global o si es un saludo directo.
+2. **Nodo Local Search:** Busca entidades específicas en el grafo.
+3. **Nodo Global Search:** Busca conceptos panorámicos.
+4. **Nodo Generator:** Redacta la respuesta final al usuario.
+
+Para pasarse información entre ellos (ej. "encontré estas entidades, redacta la respuesta"), estos nodos usan una **Memoria a Corto Plazo (`AgentState`)**. Esta memoria funciona como una libreta de apuntes temporal que se borra al cerrar el chat. En contraste, el Grafo de Conocimiento guardado en Neo4j funciona como su **Memoria a Largo Plazo**, la cual es permanente.
+
 ### ¿Por qué no cita el texto exacto del PDF?
 En esta implementación básica de GraphRAG, el LLM extrajo el "jugo" (entidades y relaciones) y **eso fue lo único que nuestro agente guardó y configuró para consultar**. Como ya no tiene acceso al texto original crudo al momento de responder, hace un resumen conceptual perfecto en lugar de hacer un "copia y pega" de los artículos de la ley.
 

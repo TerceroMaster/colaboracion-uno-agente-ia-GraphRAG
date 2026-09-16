@@ -15,7 +15,7 @@ El sistema opera bajo una arquitectura pipeline de tres fases principales:
 1.  **Ingesta y Procesamiento (Chunking):** Los documentos PDF o DOCX son divididos en fragmentos (chunks) de longitud controlada (aprox. 600 caracteres) mediante `RecursiveCharacterTextSplitter`.
 2.  **Extracción de Grafos Asistida por IA:** Cada fragmento es analizado por el modelo LLM (`gpt-4o-mini`). A través de *prompt engineering*, se extrae un JSON estructurado que mapea las entidades (Personas, Leyes, Conceptos) y las relaciones lógicas (APPLIES_TO, DEFINES, HAS_OBLIGATION) contenidas en el texto.
 3.  **Persistencia y Fusión (Merge):** Las entidades se inyectan en AuraDB (Neo4j). Las entidades idénticas de diferentes documentos se fusionan en un solo nodo central, logrando que los documentos se relacionen y conecten automáticamente entre sí.
-4.  **Agente Consultor (LangGraph):** El usuario interactúa con un Autómata Finito (StateGraph) que enruta la consulta hacia estrategias de búsqueda Local (nodos específicos), Global (conceptos panorámicos) o Directa, extrayendo el sub-grafo pertinente para fundamentar la respuesta generada.
+4.  **Agente Consultor (LangGraph):** El usuario interactúa con un Autómata Finito (StateGraph). Aunque conceptualmente es un solo "Agente Consultor", su cerebro interno se compone de 4 nodos colaborativos (sub-funciones): un Analizador de intenciones, un Buscador Local, un Buscador Global y un Generador de respuestas. Estos 4 nodos comparten una **Memoria a Corto Plazo** (`AgentState`, que almacena temporalmente la plática actual y se borra al cerrar sesión), mientras que Neo4j funge como su memoria a largo plazo (permanente).
 
 ## 4. Tecnologías y Herramientas Utilizadas (Stack)
 - **Framework de Frontend:** Streamlit (Python).

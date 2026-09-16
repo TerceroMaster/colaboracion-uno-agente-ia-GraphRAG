@@ -65,6 +65,8 @@ with col1:
     
     1. **Agente Extractor (Data Processor):** Su función es leer los documentos PDF que subes (pedacito por pedacito). Detecta las entidades (Personas, Leyes, Obligaciones) y dibuja las flechas lógicas entre ellas, guardando todo estructurado directamente en Neo4j. También se encarga de redactar los resúmenes ejecutivos.
     2. **Agente Consultor (RAG Agent):** Es el agente con el que platicas en la sección *Agente Legal*. Cuando haces una pregunta, este agente entra a Neo4j, navega por el grafo estructurado, extrae solo la información verídica de la ley, y te redacta una respuesta conversacional precisa.
+    
+    *(Nota Técnica: Internamente, el Agente Consultor no es una sola pieza, sino que su "cerebro" está dividido en 4 Nodos de LangGraph que trabajan en equipo: un analizador de intención, un buscador local, un buscador global y un redactor final).*
     """)
     
     st.markdown("### 🗣️ ¿Cómo hacer consultas a la IA?")
