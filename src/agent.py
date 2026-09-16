@@ -87,10 +87,10 @@ class GraphRAGAgent:
         
         context_parts = []
         for entity in entities:
-            # Simple exact match or contains search in Neo4j
+            # Simple exact match or contains search in Neo4j (case-insensitive)
             cypher = """
             MATCH (e:Entity)
-            WHERE e.name CONTAINS $entity OR $entity CONTAINS e.name
+            WHERE toLower(e.name) CONTAINS toLower($entity) OR toLower($entity) CONTAINS toLower(e.name)
             OPTIONAL MATCH (e)-[r]->(target)
             OPTIONAL MATCH (source)-[r2]->(e)
             RETURN e.name, e.type, e.description, 
@@ -115,12 +115,14 @@ class GraphRAGAgent:
         return {"context": context}
 
     def global_search(self, state: AgentState):
-        # For this basic implementation, global search pulls high-level concepts and their descriptions
+        # Para búsqueda global, traemos las 50 entidades más conectadas (más importantes)
         cypher = """
         MATCH (e:Entity)
-        WHERE e.type = 'Concept' OR e.type = 'Law'
+        OPTIONAL MATCH (e)-[r]-()
+        WITH e, count(r) AS rel_count
+        ORDER BY rel_count DESC
+        LIMIT 50
         RETURN e.name, e.description
-        LIMIT 100
         """
         results = self.neo4j_manager.execute_query(cypher)
         context_parts = []
