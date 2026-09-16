@@ -71,12 +71,12 @@ with col1:
     st.write("""
     Nuestra plataforma entiende la intención de tu pregunta y utiliza la estrategia correcta para buscar en el grafo de conocimiento:
     
-    **1. Búsqueda Local (GraphRAG Puro):** Ideal para explorar conexiones entre conceptos complejos o entidades específicas.
-    *   *Ejemplo:* "¿Qué relación hay entre el Código de Ética y la Ley Orgánica de la UJAT?" (Obliga al agente a buscar entidades de ambas leyes y ver cómo se cruzan).
-    *   *Ejemplo:* "Si un profesor comete una falta de integridad, ¿ante qué autoridad universitaria debe responder según los documentos?"
+    **1. Búsqueda Local (GraphRAG Puro):** Ideal para explorar conexiones directas o definiciones de la normatividad.
+    *   *Ejemplo:* "¿Qué relación hay entre el Código de Ética y la Ley Orgánica de la UJAT?" 
+    *   *Ejemplo:* "¿Qué es la ética de la UJAT según los documentos?"
     
-    **2. Búsqueda Global (Global Search):** Perfecta para pedir resúmenes panorámicos de temáticas generales.
-    *   *Ejemplo:* "Hazme un resumen de las obligaciones principales de los miembros de la comunidad universitaria."
+    **2. Búsqueda Global (Global Search):** Perfecta para pedir conceptos generales de la institución.
+    *   *Ejemplo:* "¿Cuáles son los valores fundamentales que rigen a la institución?"
     
     💡 **Dato Anti-Alucinaciones:** Si haces una pregunta sobre algo que no está en los documentos que subiste (ej. *"¿Cuál es la capital de Francia?"*), el Agente está estrictamente programado para responder que no tiene suficiente información. **Esta es la prueba definitiva de que hemos eliminado las alucinaciones**, garantizando que toda respuesta jurídica sea 100% basada en tus archivos.
     """)

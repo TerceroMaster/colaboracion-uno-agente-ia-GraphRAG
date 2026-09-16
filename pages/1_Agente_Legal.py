@@ -101,12 +101,11 @@ st.markdown("Haz preguntas sobre los documentos legales indexados. El agente nav
 with st.expander("💡 Ver preguntas de ejemplo para probar el sistema"):
     st.markdown("""
     **Para probar conexión de conceptos complejos (GraphRAG puro / Búsqueda Local):**
-    1. *"¿Qué relación hay entre el Código de Ética y la Ley Orgánica de la UJAT?"* (Obliga al agente a buscar entidades de ambas leyes y ver cómo se cruzan).
-    2. *"Si un profesor comete una falta de integridad, ¿ante qué autoridad universitaria debe responder según los documentos?"*
+    1. *"¿Qué relación hay entre el Código de Ética y la Ley Orgánica de la UJAT?"*
+    2. *"¿Qué es la ética de la UJAT según los documentos?"*
     
     **Para probar resúmenes (Búsqueda Global):**
-    1. *"Hazme un resumen de las obligaciones principales de los miembros de la comunidad universitaria."*
-    2. *"¿Cuáles son los valores fundamentales que rigen a la institución según la normatividad indexada?"*
+    1. *"¿Cuáles son los valores fundamentales que rigen a la institución?"*
     
     > **Tip Anti-Alucinación:** Si le haces una pregunta que no está en los documentos (ej. *"¿Cuál es la capital de Francia?"*), el agente te responderá educadamente que no tiene suficiente información. ¡Esa es la prueba de que logramos eliminar las alucinaciones!
     """)
